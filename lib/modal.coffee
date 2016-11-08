@@ -64,7 +64,7 @@ Template.materializeModal.onRendered ->
   # if the user "completes" the modal, for instance by clicking
   # the background.
   #
-  MaterializeModal.$modal.openModal
+  MaterializeModal.$modal.modal
     dismissible: @data.dismissible   # Modal can be dismissed by clicking outside of the modal
     opacity: @data.opacity           # Opacity of modal background
     in_duration: inDuration          # Transition in duration
@@ -80,20 +80,24 @@ Template.materializeModal.onRendered ->
       console.log("materializeModal: complete") if DEBUG
       MaterializeModal.close(false, null, false)
 
+  setTimeout (->
+    MaterializeModal.$modal.modal 'open'
+    return
+  ), 10
 
 Template.materializeModal.onDestroyed ->
   console.log("Template.materializeModal.onDestroyed") if DEBUG
 
 
 Template.materializeModal.helpers
-  
+
   #
   # bodyTemplate: The name of the template that should be rendered
   #               in the modal's body area.
   #
   bodyTemplate: ->
     @bodyTemplate or null
-  
+
   #
   # icon: Return a Material icon code for the Modal.
   #
@@ -107,13 +111,13 @@ Template.materializeModal.helpers
           'warning'
         when 'error'
           'error'
-  
+
   #
   # modalFooter:
   #
   modalFooter: ->
     @footerTemplate or 'materializeModalFooter'
-  
+
   #
   # modalFooterData:
   #
@@ -122,7 +126,7 @@ Template.materializeModal.helpers
 
 
 Template.materializeModal.events
-  
+
   "click #closeButton": (e, tmpl) ->
     e.preventDefault()
     console.log('closeButton') if DEBUG

@@ -50,12 +50,12 @@ class @MaterializeModalClass
   #
   open: (options) ->
     console.log("MaterializeModal.open()", @) if DEBUG
-    
+
     #
     # (1) Make sure there's a modal container.
     #
     @injectContainer()
-    
+
     #
     # (2) Update the this.options ReactiveVar, which will
     #     cause the dynamic Template inside materializeModalContainer
@@ -89,10 +89,8 @@ class @MaterializeModalClass
       #
       if cbSuccess
         if closeModal
-          @$modal.closeModal
-            out_duration: options.outDuration
-            complete: =>
-              @templateOptions.set null
+          @$modal.modal "close"
+          @templateOptions.set null
         else
           @templateOptions.set null
 
@@ -235,7 +233,7 @@ class @MaterializeModalClass
     result = {}
     for key in form?.serializeArray()
       @addValueToObjFromDotString(result, key.name, key.value)
-    
+
     # Override the result with the boolean values of checkboxes, if any
     for check in form?.find "input:checkbox"
       if $(check).prop('name')
@@ -273,11 +271,11 @@ class @MaterializeModalClass
   doSubmitCallback: (context) ->
     options = @templateOptions.get()
     return true unless options?.callback?
-    
+
     try
       response =
         submit: true
-      
+
       switch options.type
         when 'prompt'
           response.value = $(options.inputSelector).val()
@@ -292,7 +290,7 @@ class @MaterializeModalClass
         console.error("MaterializeModal Callback returned Error", error, response)
         Materialize.toast(error.reason, 3000, 'toast-error')
         return false
-    
+
     catch error
       options.callback(error, null)
     true
